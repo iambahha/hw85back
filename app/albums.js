@@ -23,7 +23,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   if (req.query.artist){
-    const albumsQuery = await Album.find({artist : req.query.artist});
+    const albumsQuery = await Album.find({artist : req.query.artist}).sort({yearOfIssue : 1});
     res.send(albumsQuery);
   }
 
@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const album = await Album.findById(req.params.id).populate('Artist');
+    const album = await Album.findById(req.params.id).populate('artist');
 
     if (!album) {
       return res.status(404).send({message: 'Not found'});
