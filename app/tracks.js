@@ -1,40 +1,36 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
-const Album = require('../models/Album');
+
 const Track = require('../models/Track');
-
+const ObjectId = mongoose.Types.ObjectId;
 const router = express.Router();
 
-router.get('/', async (req, res) => {
 
-	if (req.query.album){
-		const tracksQuery = await Track.find({album : req.query.album});
-		res.send(tracksQuery);
-	}
-
-	if (req.query.artist){
-		try {
-			const albums = await Album.find({artist : req.query.artist}).select('_id');
-			const albumsId = albums.map(album => album._id);
-			const tracks = await Track.find({album : {$in : albumsId}});
-			res.send(tracks);
-		} catch (e) {
+router.get('/', async(req, res) => {
+	if(req.query.album){
+		try{
+			const albumTracks = await Track.find({album: ObjectId(req.query.album)});
+			res.send(albumTracks);
+		} catch(e) {
 			res.status(400).send(e);
 		}
+	} else {
+		const tracks = await Track.find();
+		res.send(tracks);
 	}
-
-	const tracks = await Track.find();
-
-	return res.send(tracks);
 });
 
-router.post('/', async (req, res) => {
-	try {
-		const track = new Track(req.body);
+router.post('/', async(req, res) => {
+	const trackData = req.body;
+
+	const track = new Track(trackData);
+
+	try{
 		await track.save();
-		return res.send(track);
+		res.send({trackId: track._id});
 	} catch (e) {
-		res.status(400).send(e);
+		res.status(404).send(e);
 	}
 });
 

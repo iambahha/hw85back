@@ -1,20 +1,18 @@
 const express = require('express');
 const User = require('../models/User');
-const nanoid = require("nanoid");
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const user = new User({
-    username: req.body.username,
-    password: req.body.password
-  });
+  const user = new User(req.body);
+
   user.generateToken();
+
   try {
     await user.save();
-    res.send({username : user.username, id : user._id});
+    return res.send({token: user.token});
   } catch (e) {
-    res.status(400).send(e);
+    return res.status(400).send(e);
   }
 });
 
@@ -22,17 +20,20 @@ router.post('/sessions', async (req, res) => {
   const user = await User.findOne({username: req.body.username});
 
   if (!user) {
-    return res.status(400).send({error: 'Username not found'});
+    return res.status(400).send({error: 'User does not exist'});
   }
 
   const isMatch = await user.checkPassword(req.body.password);
 
   if (!isMatch) {
-    return res.status(400).send({error: 'Password is wrong!'});
+    return res.status(400).send({error: 'Password incorrect'});
   }
+
   user.generateToken();
+
   await user.save();
-  return res.send({token : user.token});
+
+  res.send({message: "Login successful", user});
 });
 
 module.exports = router;

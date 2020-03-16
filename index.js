@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const config = require('./config');
 const albums = require('./app/albums');
 const artists = require('./app/artists');
 const tracks = require('./app/tracks');
@@ -16,11 +17,7 @@ app.use(cors());
 app.use(express.static('public'));
 
 const run = async () => {
-	await mongoose.connect('mongodb://localhost/hws', {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useCreateIndex: true,
-	});
+	await mongoose.connect(config.database, config.databaseOptions);
 
 	app.use('/albums', albums);
 	app.use('/artists', artists);
