@@ -1,24 +1,19 @@
-const nanoid = require('nanoid');
-
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
 const TrackHistorySchema = new Schema({
-	user: {
-		type: String,
-		required: true,
-		unique: true
-	},
-	track: {
-		type: String,
-		required: true
-	},
-	datetime: {
-		type: String,
-		required: true,
-	}
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  track: {
+    type: Schema.Types.ObjectId,
+    ref: 'Track',
+    required: true,
+  },
+  datetime: String
 });
 
 const TrackHistory = mongoose.model('TrackHistory', TrackHistorySchema);

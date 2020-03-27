@@ -4,11 +4,10 @@ const rootPath = __dirname;
 
 module.exports = {
   rootPath,
-  uploadPath: path.join(rootPath, 'public', 'uploads'),
-  database: 'mongodb://localhost/hw83',
-  databaseOptions: {
+  uploadPath: path.join(rootPath, 'public/uploads'),
+  dbUrl: 'mongodb://localhost/hws',
+  mongoOptions: {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  }
+    useCreateIndex: true
+  },
 };
