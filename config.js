@@ -8,6 +8,10 @@ module.exports = {
   dbUrl: 'mongodb://localhost/hws',
   mongoOptions: {
     useNewUrlParser: true,
-    useCreateIndex: true
+    useCreateIndex: true,
   },
+  facebook: {
+    appId: '622777065237173',
+    appSecret: 'b109da92be1a6712f2e9661bb334409f'
+  }
 };
